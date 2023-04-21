@@ -1,12 +1,25 @@
-# 使用 lcomplete/huntly 作为基础镜像
-FROM lcomplete/huntly
+FROM openjdk:11
 
-# 在容器内创建 /data 目录
-RUN mkdir /data
+LABEL maintainer="lcomplete"
+LABEL version = "0.1.0"
 
-# 设置容器启动时的默认命令
-CMD ["npm", "start"]
+WORKDIR /app
 
-# 暴露容器内部的 80 端口
-EXPOSE 80
+RUN mkdir -p /data /data/lucene
 
+ARG JAR_FILE=./app/server/huntly-server/target/huntly-server-*.jar
+ARG JAR_PATH=/app/server.jar
+
+COPY ${JAR_FILE} ${JAR_PATH}
+
+ENV JAVA_ARGS="-Xms128m -Xmx1024m"
+ENV VM_ARGS="-Duser.timezone=GMT+08"
+ENV APP_ARGS=""
+ENV PROFILE="default"
+ENV PORT=80
+ENV JAR_PATH=${JAR_PATH}
+
+EXPOSE ${PORT}
+EXPOSE 443
+
+ENTRYPOINT ["sh", "-c", "java $JAVA_ARGS $VM_ARGS -jar $JAR_PATH --spring.profiles.active=$PROFILE --server.port=$PORT --huntly.dataDir=/data/ --huntly.luceneDir=/data/lucene $APP_ARGS" ]
