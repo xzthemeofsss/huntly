@@ -10,5 +10,3 @@ CMD ["npm", "start"]
 # 暴露容器内部的 80 端口
 EXPOSE 80
 
-# 定义挂载点，将主机当前目录下的 data 目录映射到容器内的 /data 目录
-VOLUME ["/data"]
