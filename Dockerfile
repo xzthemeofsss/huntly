@@ -5,6 +5,8 @@ LABEL version = "0.1.0"
 
 WORKDIR /app
 
+VOLUME /data
+
 RUN mkdir -p /data /data/lucene
 
 ARG JAR_FILE=./app/server/huntly-server/target/huntly-server-*.jar
